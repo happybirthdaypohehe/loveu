@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Just For You, Aditi 💙</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Outfit:wght@300;400;600&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(-45deg, #020b18, #0a1f44, #0d2f6e, #1a4fc4, #3a7bd5, #1a3a8f);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Stars bg */
+        .stars {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            border-radius: 50%;
+            background: #fff;
+            animation: twinkle var(--d) ease-in-out infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0%   { opacity: 0.1; transform: scale(1); }
+            100% { opacity: 0.9; transform: scale(1.4); }
+        }
+
+        /* Floating particles */
+        .particles { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:1; overflow:hidden; }
+        .particle  { position:absolute; opacity:0; animation: floatUp 18s linear infinite; }
+        @keyframes floatUp {
+            0%   { transform: translateY(110vh) scale(0) rotate(0deg); opacity:0; }
+            10%  { opacity: 0.6; }
+            80%  { opacity: 0.6; }
+            100% { transform: translateY(-10vh) scale(1.3) rotate(360deg); opacity:0; }
+        }
+
+        /* Page layout */
+        .page {
+            position: relative;
+            z-index: 10;
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 40px 20px 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 48px;
+        }
+
+        /* Section card */
+        .section-card {
+            width: 100%;
+            background: rgba(10, 30, 80, 0.35);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(126,184,247,0.2);
+            border-radius: 28px;
+            padding: 40px 32px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .section-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-label {
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(168,204,245,0.6);
+            margin-bottom: 10px;
+        }
+
+        /* ── Music Player ── */
+        .music-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.4rem;
+            background: -webkit-linear-gradient(45deg, #7eb8f7, #c5deff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+        }
+
+        .music-artist {
+            color: rgba(168,204,245,0.8);
+            font-size: 1rem;
+            margin-bottom: 28px;
+        }
+
+        .music-disc {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 4px solid rgba(126,184,247,0.3);
+            margin: 0 auto 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(58,123,213,0.5);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .music-disc.spinning {
+            animation: spinDisc 4s linear infinite;
+        }
+
+        @keyframes spinDisc {
+            to { transform: rotate(360deg); }
+        }
+
+        .disc-center {
+            position: absolute;
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            background: rgba(2,11,24,0.7);
+            border: 3px solid rgba(126,184,247,0.5);
+            z-index: 2;
+        }
+
+        .mini-play-btn {
+            background: rgba(26,79,196,0.3);
+            border: 2px solid rgba(126,184,247,0.35);
+            color: #c5deff;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+
+        .mini-play-btn:hover {
+            background: rgba(58,123,213,0.45);
+            border-color: #7eb8f7;
+            transform: scale(1.1);
+            box-shadow: 0 0 16px rgba(126,184,247,0.4);
+        }
+
+        /* ── Day Counter ── */
+        .counter-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.4rem;
+            background: -webkit-linear-gradient(45deg, #7eb8f7, #c5deff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 28px;
+        }
+
+        .counter-grid {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .counter-block {
+            background: rgba(26,79,196,0.2);
+            border: 1px solid rgba(126,184,247,0.2);
+            border-radius: 18px;
+            padding: 18px 22px;
+            min-width: 80px;
+        }
+
+        .counter-num {
+            font-size: 2.6rem;
+            font-weight: 600;
+            color: #c5deff;
+            line-height: 1;
+            text-shadow: 0 0 20px rgba(126,184,247,0.6);
+        }
+
+        .counter-lbl {
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(168,204,245,0.6);
+            margin-top: 6px;
+        }
+
+        .counter-sub {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: rgba(168,204,245,0.8);
+            font-size: 1.05rem;
+            margin-top: 10px;
+        }
+
+        /* ── Reasons I Love You ── */
+        .reasons-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.4rem;
+            background: -webkit-linear-gradient(45deg, #7eb8f7, #c5deff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 28px;
+        }
+
+        .reasons-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            text-align: left;
+        }
+
+        .reason-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            background: rgba(26,79,196,0.15);
+            border: 1px solid rgba(126,184,247,0.15);
+            border-radius: 16px;
+            padding: 16px 18px;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .reason-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reason-num {
+            font-size: 1.5rem;
+            min-width: 32px;
+        }
+
+        .reason-text {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: rgba(210,230,255,0.95);
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        /* ── Fireworks canvas ── */
+        #fireworksCanvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        /* ── Fireworks trigger btn ── */
+        .fireworks-btn {
+            background: linear-gradient(45deg, #1a4fc4, #3a7bd5);
+            border: none;
+            padding: 16px 42px;
+            color: white;
+            border-radius: 50px;
+            font-size: 1.15rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            box-shadow: 0 10px 28px rgba(26,79,196,0.5);
+            transition: all 0.35s ease;
+            letter-spacing: 0.5px;
+            animation: surprisePulse 2.5s ease-in-out infinite;
+        }
+
+        .fireworks-btn:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 15px 38px rgba(58,123,213,0.7);
+        }
+
+        @keyframes surprisePulse {
+            0%,100% { box-shadow: 0 10px 28px rgba(26,79,196,0.5); }
+            50%      { box-shadow: 0 10px 40px rgba(126,184,247,0.6); }
+        }
+
+        .fireworks-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.4rem;
+            background: -webkit-linear-gradient(45deg, #7eb8f7, #c5deff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .fireworks-sub {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: rgba(168,204,245,0.8);
+            margin-bottom: 26px;
+            font-size: 1.05rem;
+        }
+
+        /* ── Back button ── */
+        .back-btn {
+            background: transparent;
+            border: 1px solid rgba(126,184,247,0.25);
+            color: rgba(168,204,245,0.6);
+            padding: 10px 28px;
+            border-radius: 30px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+
+        .back-btn:hover {
+            color: #c5deff;
+            border-color: rgba(126,184,247,0.5);
+        }
+
+        /* Header */
+        .page-header {
+            text-align: center;
+            padding-top: 10px;
+        }
+
+        .page-header h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.8rem;
+            background: -webkit-linear-gradient(45deg, #7eb8f7, #c5deff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: rgba(168,204,245,0.8);
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 500px) {
+            .page-header h1 { font-size: 2.8rem; }
+            .counter-num { font-size: 2rem; }
+            .counter-block { padding: 14px 16px; min-width: 68px; }
+            .music-title, .counter-title, .reasons-title, .fireworks-title { font-size: 2rem; }
+        }
+       /* ── Gallery & Carousel Enhancements ── */
+.carousel-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    margin-top: 16px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.carousel {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 20px;
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.6s cubic-bezier(0.6, 0, 0.4, 1);
+    border-radius: 20px;
+}
+
+.slide {
+    min-width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 20px;
+    background: #0a1e42;
+    transition: filter 0.3s ease;
+    opacity: 0.8;
+    transform: scale(0.98);
+}
+
+.slide.active {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(10, 30, 80, 0.7);
+    border: 2px solid rgba(126, 184, 247, 0.5);
+    color: #c5deff;
+    font-size: 20px;
+    padding: 10px 14px;
+    cursor: pointer;
+    border-radius: 50%;
+    z-index: 10;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+}
+
+.nav:hover {
+    background: rgba(58, 123, 213, 0.9);
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 0 15px rgba(126, 184, 247, 0.6);
+}
+
+.prev { left: 12px; }
+.next { right: 12px; }
+
+/* Slide Indicators */
+.indicators {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 16px;
+    padding: 8px;
+    border-radius: 20px;
+    background: rgba(10, 30, 80, 0.4);
+    backdrop-filter: blur(10px);
+}
+
+.indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(168, 204, 245, 0.4);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.indicator.active {
+    background: #7eb8f7;
+    transform: scale(1.2);
+    box-shadow: 0 0 8px rgba(126, 184, 247, 0.6);
+}
+
+/* Hover Effect */
+.carousel-container:hover .nav {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .slide {
+        height: 300px;
+    }
+    .carousel-container {
+        margin-top: 12px;
+    }
+}
+
+    </style>
+</head>
+<body>
+
+<canvas id="fireworksCanvas"></canvas>
+<div class="stars" id="stars"></div>
+<div class="particles" id="particles"></div>
+
+<div class="page">
+
+    <!-- Back -->
+    <button class="back-btn" onclick="window.location.href='index.html'">← Back</button>
+
+    <!-- Header -->
+    <div class="page-header section-card">
+        <div class="section-label">a little more love</div>
+        <h1>Just for you, Baby hehe 💙</h1>
+        <p>Because one page wasn't enough to hold it all.</p>
+    </div>
+
+    <!-- Music Player -->
+    <!-- Day Counter -->
+    <div class="section-card" id="counterCard">
+        <div class="section-label"></div>
+        <div class="counter-title">Counting Every Moment With You</div>
+        <div class="counter-grid">
+            <div class="counter-block">
+                <div class="counter-num" id="cntYears">0</div>
+                <div class="counter-lbl">Years</div>
+            </div>
+            <div class="counter-block">
+                <div class="counter-num" id="cntMonths">0</div>
+                <div class="counter-lbl">Months</div>
+            </div>
+            <div class="counter-block">
+                <div class="counter-num" id="cntDays">0</div>
+                <div class="counter-lbl">Days</div>
+            </div>
+            <div class="counter-block">
+                <div class="counter-num" id="cntHours">0</div>
+                <div class="counter-lbl">Hours</div>
+            </div>
+            <div class="counter-block">
+                <div class="counter-num" id="cntMins">0</div>
+                <div class="counter-lbl">Mins</div>
+            </div>
+            <div class="counter-block">
+                <div class="counter-num" id="cntSecs">0</div>
+                <div class="counter-lbl">Secs</div>
+            </div>
+        </div>
+        <div class="counter-sub">…and every single second has been worth it. 🌙</div>
+    </div>
+
+    <!-- Reasons I Love You -->
+    <div class="section-card" id="reasonsCard">
+        <div class="section-label">from the heart</div>
+        <div class="reasons-title">Reasons I Love You</div>
+        <div class="reasons-list" id="reasonsList">
+            <div class="reason-item"><span class="reason-num">💙</span><span class="reason-text">The way your smile can completely change my entire day without even trying.</span></div>
+            <div class="reason-item"><span class="reason-num">✨</span><span class="reason-text">How you always know exactly what to say when I need it most.</span></div>
+            <div class="reason-item"><span class="reason-num">🌙</span><span class="reason-text">Your laugh, it's the most beautiful sound I've ever heard.</span></div>
+            <div class="reason-item"><span class="reason-num">💙</span><span class="reason-text">The way you make even the most ordinary moments feel extraordinary.</span></div>
+            <div class="reason-item"><span class="reason-num">🌟</span><span class="reason-text">How incredibly kind and caring you are to everyone around you.</span></div>
+            <div class="reason-item"><span class="reason-num">💙</span><span class="reason-text">The way you make me feel like home no matter where we are.</span></div>
+            <div class="reason-item"><span class="reason-num">🎵</span><span class="reason-text">Because loving you has been the easiest and best thing I've ever done.</span></div>
+        </div>
+    </div>
+
+    <!-- Fireworks -->
+    <div class="section-card" id="fireworksCard">
+        <div class="section-label">one last thing</div>
+        <div class="fireworks-title">Happy Birthday, Love 🎂</div>
+        <div class="fireworks-sub">Tap below and watch the sky light up for you 💙</div>
+        <button class="fireworks-btn" onclick="launchFireworks()">🎆 Light Up The Sky</button>
+    </div>
+
+</div>
+<!-- Gallery Section -->
+
+
+        <!-- Slide Indicators -->
+        <div class="indicators" id="indicators"></div>
+    </div>
+</div>
+s
+<script>
+    // ── Stars ──
+    const starsEl = document.getElementById('stars');
+    for (let i = 0; i < 80; i++) {
+        const s = document.createElement('div');
+        s.className = 'star';
+        const sz = Math.random() * 3 + 1;
+        s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${Math.random()*3+1}s;animation-delay:${Math.random()*3}s`;
+        starsEl.appendChild(s);
+    }
+
+    // ── Particles ──
+    const particlesEl = document.getElementById('particles');
+    const shapes = ['🎈','🎉','💙','✨','🎂','💫','⭐','🌟'];
+    for (let i = 0; i < 30; i++) {
+        const p = document.createElement('div');
+        p.innerHTML = shapes[Math.floor(Math.random() * shapes.length)];
+        p.className = 'particle';
+        p.style.fontSize = (Math.random() * 18 + 8) + 'px';
+        p.style.left = Math.random() * 100 + 'vw';
+        p.style.animationDuration = (Math.random() * 15 + 15) + 's';
+        p.style.animationDelay = (Math.random() * 10 - 5) + 's';
+        particlesEl.appendChild(p);
+    }
+
+    // ── Scroll-reveal ──
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.section-card').forEach(c => observer.observe(c));
+
+    // Staggered reasons reveal
+    const reasonObserver = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                const items = e.target.querySelectorAll('.reason-item');
+                items.forEach((item, i) => {
+                    setTimeout(() => item.classList.add('visible'), i * 150);
+                });
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reasons-list').forEach(l => reasonObserver.observe(l));
+
+   // ── Day Counter ──
+function updateCounter() {
+    const now = new Date();
+
+    // START DATE: Jan 29, 2025 - 10:52 PM
+    const start = new Date(2025, 0, 29, 22, 52, 0);
+    // month is 0-based:
+    // 0 = January
+
+    const diff = now - start;
+
+    const totalSecs = Math.floor(diff / 1000);
+
+    const secs   = totalSecs % 60;
+    const mins   = Math.floor(totalSecs / 60) % 60;
+    const hours  = Math.floor(totalSecs / 3600) % 24;
+    const days   = Math.floor(totalSecs / 86400) % 30;
+    const months = Math.floor(totalSecs / (86400 * 30)) % 12;
+    const years  = Math.floor(totalSecs / (86400 * 365));
+
+    document.getElementById('cntYears').textContent  = years;
+    document.getElementById('cntMonths').textContent = months;
+    document.getElementById('cntDays').textContent   = days;
+    document.getElementById('cntHours').textContent  = hours;
+    document.getElementById('cntMins').textContent   = String(mins).padStart(2, '0');
+    document.getElementById('cntSecs').textContent   = String(secs).padStart(2, '0');
+}
+
+updateCounter();
+setInterval(updateCounter, 1000);
+
+    // ── Music — autoplay + spin disc ──
+    const audio = document.getElementById('audioPlayer');
+    const disc  = document.getElementById('musicDisc');
+
+    // Try autoplay, start spinning when it plays
+    audio.play().then(() => {
+        disc.classList.add('spinning');
+    }).catch(() => {
+        // Browsers sometimes block autoplay — start on first tap
+        document.addEventListener('click', () => {
+            audio.play();
+            disc.classList.add('spinning');
+        }, { once: true });
+    });
+
+    // ── Fireworks ──
+    const canvas = document.getElementById('fireworksCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    window.addEventListener('resize', () => {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+
+    let particles = [];
+    let fwRunning = false;
+    let fwTimer;
+
+    class FWParticle {
+        constructor(x, y, color) {
+            this.x = x; this.y = y;
+            this.color = color;
+            this.vx = (Math.random() - 0.5) * 8;
+            this.vy = (Math.random() - 0.5) * 8 - 3;
+            this.alpha = 1;
+            this.radius = Math.random() * 3 + 1;
+            this.gravity = 0.12;
+        }
+        update() {
+            this.vx *= 0.98;
+            this.vy += this.gravity;
+            this.x += this.vx;
+            this.y += this.vy;
+            this.alpha -= 0.018;
+        }
+        draw() {
+            ctx.save();
+            ctx.globalAlpha = this.alpha;
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+
+    function explode(x, y) {
+        const colors = ['#7eb8f7','#c5deff','#ffffff','#3a7bd5','#a8ccf5','#ffd700','#ffb3c6','#ff7eb8'];
+        for (let i = 0; i < 80; i++) {
+            particles.push(new FWParticle(x, y, colors[Math.floor(Math.random() * colors.length)]));
+        }
+    }
+
+    function fwLoop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles = particles.filter(p => p.alpha > 0);
+        particles.forEach(p => { p.update(); p.draw(); });
+        if (fwRunning || particles.length > 0) requestAnimationFrame(fwLoop);
+    }
+
+    function launchFireworks() {
+        fwRunning = true;
+        fwLoop();
+
+        let count = 0;
+        const burst = () => {
+            explode(Math.random() * canvas.width, Math.random() * canvas.height * 0.75);
+            count++;
+            if (count < 18) setTimeout(burst, 300);
+            else {
+                setTimeout(() => { fwRunning = false; }, 3000);
+            }
+        };
+        burst();
+// ── Carousel Logic ──
+let currentSlide = 0;
+let autoSlideInterval;
+const slides = document.querySelectorAll('.slide');
+const track = document.getElementById('carouselTrack');
+const indicatorsContainer = document.getElementById('indicators');
+
+// Create indicators
+slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.classList.add('indicator');
+    if (i === 0) dot.classList.add('active');
+    dot.addEventListener('click', () => goToSlide(i));
+    indicatorsContainer.appendChild(dot);
+});
+
+const indicators = document.querySelectorAll('.indicator');
+
+function updateIndicators() {
+    indicators.forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentSlide);
+    });
+}
+
+function moveSlide(direction) {
+    currentSlide += direction;
+    if (currentSlide < 0) currentSlide = slides.length - 1;
+    if (currentSlide >= slides.length) currentSlide = 0;
+    updateCarousel();
+}
+
+function goToSlide(index) {
+    currentSlide = index;
+    updateCarousel();
+}
+
+function updateCarousel() {
+    track.style.transform = `translateX(-${currentSlide * 100}%)`;
+    updateIndicators();
+}
+
+// Auto-slide
+function startAutoSlide() {
+    autoSlideInterval = setInterval(() => {
+        moveSlide(1);
+    }, 4000);
+}
+
+function pauseAutoSlide() {
+    clearInterval(autoSlideInterval);
+}
+
+// Pause on hover
+const carouselContainer = document.querySelector('.carousel-container');
+carouselContainer.addEventListener('mouseenter', pauseAutoSlide);
+carouselContainer.addEventListener('mouseleave', startAutoSlide);
+
+// Start auto-slide
+startAutoSlide();
+
+// Initial update
+updateCarousel();
+
+    }
+</script>
+</body>
+</html>
